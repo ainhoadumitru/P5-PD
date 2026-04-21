@@ -1,0 +1,55 @@
+#include <Arduino.h>
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+
+// Definiciones de la pantalla
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64 
+#define OLED_RESET    -1 
+#define SCREEN_ADDRESS 0x3C 
+
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+
+void setup() {
+  Serial.begin(115200);
+
+  // Inicializar pantalla
+  if(!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
+    Serial.println(F("SSD1306 no encontrado"));
+    for(;;);
+  }
+
+  // --- CONFIGURACIÓN DEL MENSAJE ---
+  
+  display.clearDisplay();      // Borra lo que haya en memoria
+  display.setTextColor(SSD1306_WHITE); // Color blanco (el único en estas pantallas)
+
+  // Línea 1: Título pequeño
+  display.setTextSize(1);      
+  display.setCursor(0, 0);     
+  display.println(F("Sistemas Digitales"));
+
+  // Línea 2: Mensaje principal grande
+  display.setTextSize(2);      // Letra más grande
+  display.setCursor(0, 20);    // Bajamos el cursor para no solapar
+  display.println(F("HOLA GORKA")); 
+
+  // Línea 3: Detalle inferior
+  display.setTextSize(1);
+  display.setCursor(0, 50);
+  display.print(F("Bus I2C: OK (0x3C)"));
+
+  // Dibujar una línea decorativa
+  display.drawLine(0, 12, 128, 12, SSD1306_WHITE);
+
+  // ¡ENVIAR TODO A LA PANTALLA!
+  display.display(); 
+  
+  Serial.println(F("Mensaje enviado a la pantalla"));
+}
+
+void loop() {
+  // El loop se queda vacío porque el mensaje es estático
+  // Pero podrías añadir un parpadeo si quisieras
+}
